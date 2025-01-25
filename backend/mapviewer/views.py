@@ -8,6 +8,10 @@ class WaypointView(viewsets.ModelViewSet):
     serializer_class = WaypointSerializer
     queryset = Waypoint.objects.all()
 
+class WaypointView(viewsets.ModelViewSet):
+    serializer_class = WaypointSerializer
+    queryset = Waypoint.objects.all()
+
 class ImageView(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
     queryset = Image.objects.all()
