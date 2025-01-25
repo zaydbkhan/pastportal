@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from mapviewer import views
+from django.http import HttpResponse 
 
 router = routers.DefaultRouter()
 router.register(r'waypoints', views.WaypointView, 'waypoint')
