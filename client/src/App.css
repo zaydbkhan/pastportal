@@ -23,7 +23,6 @@ body {
 
 .buttons{
   display: flex;
-  padding: 50px;
 }
 
 .main{
@@ -37,3 +36,9 @@ body {
   direction: 'row';
 }
 
+/* width and height changes must be updated inline */
+.theMap {
+  width: '75vw';
+  height: '50vh';
+  border: 8px solid orange;
+}

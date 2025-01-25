@@ -85,10 +85,10 @@ function App() {
                   <div className="main">
                       <div className="topRow">
 
-                        <div className="searchBar" style={{ marginBottom: '1rem'}}>
+                        <div className="searchBar">
                           <input type="text" placeholder="Enter text here..." />
                         </div>
-                        <div className="buttons" style={{ marginBottom: '1rem' }}>
+                        <div className="buttons">
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignIn">Sign In</button>
                           </div>
@@ -99,7 +99,7 @@ function App() {
                         </div>
                       </div>
 
-                      <div className="Map" style={{ width: '800px', height: '500px' }}>
+                      <div className="theMap" style={{width: '75vw', height: '50vh'}}>
                         <MapContainer
                           center={[34.02235633613326, -118.28512377318303]}
                           zoom={15}
