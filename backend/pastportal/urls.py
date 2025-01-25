@@ -20,6 +20,7 @@ from rest_framework import routers
 from mapviewer import views
 
 router = routers.DefaultRouter()
+router.register(r'users', views.UserView, 'user')
 router.register(r'waypoints', views.WaypointView, 'waypoint')
 router.register(r'images', views.ImageView, 'image')
 
