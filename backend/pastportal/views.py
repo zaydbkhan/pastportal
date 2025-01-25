@@ -5,6 +5,8 @@ import json
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
+#melissa api integration with email and location
+
 def verify_email(request):
     if request.method == "POST":
         data = json.loads(request.body) 
@@ -25,6 +27,27 @@ def verify_email(request):
             return JsonResponse({"error": "Email record does not match"}, status=400)
             
         return JsonResponse({"message": "Email is valid"}, status=200)
+
+    else:
+        return JsonResponse({"error": "Invalid HTTP method. POST is required."}, status=405)
+
+def return_location(request):
+    if request.method == "POST":
+        data = json.loads(request.body) 
+        zipcode = data.get("zip code")
+            
+        if not zipcode:
+            return JsonResponse({"error": "ZipCode is required"}, status=400)
+            
+        url = f"https://globalip.melissadata.net/v4/WEB/iplocation/doiplocation?id=########&t=CurlExample&opt=&ip={zip_code}}"
+        
+        headers = {
+            "Accept": "application/json"
+        }
+            
+        response = requests.get(url, headers=headers)
+        out = response.json()           
+        return JsonResponse({"message": out}, status=200)
 
     else:
         return JsonResponse({"error": "Invalid HTTP method. POST is required."}, status=405)
