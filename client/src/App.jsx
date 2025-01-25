@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Home from './routes/Home';
+import theLogo from'./images/ppLogo.png';
 
 
 
@@ -25,6 +26,10 @@ function App() {
                 <div className="typewriter">
                     <p>PastPortal</p>
                   </div>
+                  <img
+                  style={{width: '200px',height: '200px'}}
+                  src={theLogo}
+            />
                   <div className="main">
                     <div className="">
                       <Link to="/home">
