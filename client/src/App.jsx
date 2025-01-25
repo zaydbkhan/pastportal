@@ -20,12 +20,11 @@ function App() {
             path="/"
             element={
               <>
-                <header className="">
-                  <div className="typewriter">
+                <div className="" style = {{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <div className="window">
+                <div className="typewriter">
                     <p>PastPortal</p>
                   </div>
-                </header>
-                <div className="">
                   <div className="main">
                     <div className="">
                       <Link to="/home">
@@ -39,7 +38,7 @@ function App() {
 
                   </div>
                 </div>
-                
+                </div>
               </>
             }
           />
