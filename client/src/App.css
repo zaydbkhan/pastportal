@@ -43,6 +43,14 @@ html, body {
 
 }
 
+.mapbox {
+  width: 80vw;
+  height: 60vh;
+  border: 10px solid #c76e00;
+  justify-self: center;
+  margin: 10px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

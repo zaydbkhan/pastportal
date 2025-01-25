@@ -41,6 +41,10 @@ function App() {
                       </Link>
                     </div>
 
+                    <div className="mapbox">
+                        map go here
+                    </div>
+
                   </div>
                 </div>
                 </div>
