@@ -15,7 +15,7 @@ const LoginSignup = () => {
                     <input type="email" placeholder="Email" required />
                 </div>
                 <div className="input">
-                    <input type="text" placeholder="Location" required />
+                    <input type="text" placeholder="ZIP Code" required />
                 </div>
                 <div className="input">
                     <input type="password" placeholder="Password" required />
