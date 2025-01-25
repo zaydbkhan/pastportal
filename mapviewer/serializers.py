@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Waypoint, Image
+from .models import Waypoint, Image
 
 class WaypointSerializer(serializers.ModelSerializer):
     class Meta:
