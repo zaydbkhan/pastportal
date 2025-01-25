@@ -40,7 +40,7 @@ const Home = () => {
                   >Click here</button>
                 
 
-        <input type="text" style= {{width:'440px', height: '500px' }}value={returnValue} id="username" name="username"/> 
+                <input type="text" style= {{width:'440px', height: '500px' }} value={returnValue} id="username" name="username"   onChange={(e) => setReturnValue(e.target.value)}         /> 
         <a
           className="App-link"
           href="https://reactjs.org"
