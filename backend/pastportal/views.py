@@ -43,7 +43,7 @@ def return_location(request):
         if not zipcode:
             return JsonResponse({"error": "ZipCode is required"}, status=400)
             
-        url = f"https://globalip.melissadata.net/v4/WEB/iplocation/doiplocation?id=########&t=CurlExample&opt=&ip={zip_code}"
+        url = f"https://globalip.melissadata.net/v4/WEB/iplocation/doiplocation?id=########&t=CurlExample&opt=&ip={zipcode}"
         
         headers = {
             "Accept": "application/json"
