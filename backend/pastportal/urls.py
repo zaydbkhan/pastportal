@@ -27,5 +27,6 @@ router.register(r'images', views.ImageView, 'image')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('verify_email/', views.verify_email, name='verify_email')
+    path('verify_email/', views.verify_email, name='verify_email'),
+    path('return_location/', views.return_location, name='return_location')
 ]

@@ -7,6 +7,10 @@ def index(request):
 
 #melissa api integration with email and location
 
+#fetch api
+#post, get, update, delete 
+#post = frontend specifies a post to api, backend specifies the interaction
+
 def verify_email(request):
     if request.method == "POST":
         data = json.loads(request.body) 
