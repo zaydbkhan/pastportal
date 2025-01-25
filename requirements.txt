@@ -1,4 +1,6 @@
 asgiref==3.8.1
 Django==5.1.5
+django-mysql==4.15.0
 djangorestframework==3.15.2
+mysql-connector-python==9.2.0
 sqlparse==0.5.3
