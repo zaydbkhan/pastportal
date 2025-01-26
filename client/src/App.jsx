@@ -22,53 +22,8 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   const [allWayPoints, setAllWayPoints] = useState([]);
   const [imagesArray, setImagesArray] = useState({});
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
 
   useEffect(() => {
-
-    const setLocation = async () => {
-      setIsLoading(true);
-      setError(null);
-    
-      try {
-        const response = await fetch('http://localhost:8000/return_location', { 
-          method: 'POST',
-          credentials: "include",
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            // Add payload if required by the API here
-          }),
-        });
-    
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-    
-        const data = await response.json();
-    
-        if (data.latitude && data.longitude) {
-          const stringifiedData = JSON.stringify(data, null, 2); // Pretty print JSON
-          setReturnValue(stringifiedData);
-        } else {
-          throw new Error('Invalid data structure returned from the server');
-        }
-    
-      } catch (error) {
-        console.error('Error fetching location:', error);
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    useEffect(() => {
-      setLocation(); // Call setLocation when the component mounts
-    }, []);
-    
-
     const fetchImages = async (waypointId) => {
       try {
         const response = await fetch(`http://localhost:8000/api/images/?waypoint=${waypointId}`, {
