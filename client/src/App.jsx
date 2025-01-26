@@ -8,6 +8,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'; // Add this import for Leaflet CSS
 
+import logoImg from '../src/images/pastportal_logo.jpg';
+
 function App() {
 
   const defaultIcon = new Icon({
@@ -79,7 +81,7 @@ function App() {
                 <header className="">
                   <div className="title">
                     <div className="logoTitle">
-                    <img src="images/pastportal_logo.jpg" alt="PastPortal"></img>
+                    <img src={logoImg} alt="PastPortal"></img>
                       <p>PastPortal</p>
                     </div>
                     <div className="buttons">
