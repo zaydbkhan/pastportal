@@ -1,4 +1,5 @@
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 import socket 
@@ -12,6 +13,7 @@ def index(request):
 #post, get, update, delete 
 #post = frontend specifies a post to api, backend specifies the interaction
 
+@csrf_exempt
 def verify_email(request):
     if request.method == "POST":
         data = json.loads(request.body) 
@@ -36,6 +38,7 @@ def verify_email(request):
     else:
         return JsonResponse({"error": "Invalid HTTP method. POST is required."}, status=405)
 
+@csrf_exempt
 def return_location():
     try: 
         hostname = socket.gethostname()
