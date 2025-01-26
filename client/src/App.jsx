@@ -6,7 +6,7 @@ import SignUp from './routes/SignUp';
 import SignIn from './routes/SignIn';
 
 import theLogo from './images/ppLogo.png';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet'
 import { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'; // Add this import for Leaflet CSS
 
@@ -16,13 +16,24 @@ import "slick-carousel/slick/slick-theme.css";
 
 import logoImg from '../src/images/pastportal_logo.jpg';
 
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { initializeApp } from "firebase/app";
+
 function App() {
   const [waypoint, setWaypoint] = useState(0);
   const [searching, setReturnValue] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [allWayPoints, setAllWayPoints] = useState([]);
   const [imagesArray, setImagesArray] = useState({});
+  const [clickMarker, setClickMarker] = useState(null);
+  const [mapCenter, setMapCenter] = useState(null);
 
+  const testCoord = {
+    latitude: "34.058315",
+    longitude: "-118.246819",
+  }
+
+  //use effect starts here
   useEffect(() => {
     const fetchImages = async (waypointId) => {
       try {
@@ -76,6 +87,35 @@ function App() {
 
     fetchWaypoints();
   }, []);
+
+  //use effect ends here
+
+  const MapEvents = ({ coords }) => {
+    const map = useMap();
+    
+    useEffect(() => {
+      if (coords) {
+        map.setView([parseFloat(coords.latitude), parseFloat(coords.longitude)], 15);
+      }
+    }, [coords, map]);
+
+    useMapEvents({
+      click: (e) => {
+        const { lat, lng } = e.latlng;
+        setClickMarker({
+          latitude: lat,
+          longitude: lng,
+          isOpen: true
+        });
+      }
+    });
+    
+    return null;
+  };
+
+  const handleSearch = () => {
+    setMapCenter(testCoord);
+  }
 
   const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -181,7 +221,17 @@ function App() {
                             <img src={logoImg} alt="PastPortal" width="250" height="210"></img>
                             <div className="middle">
                               <p id="logoText">PastPortal</p>
-                              <input className="searchBar" style={{ width: '40vw', height: '30px' }} type="text" placeholder="Enter a location here..." />
+                              <input 
+                                className="searchBar" 
+                                style={{ width: '40vw', height: '30px' }} 
+                                type="text" 
+                                placeholder="Enter a location here..."
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    handleSearch();
+                                  }
+                                }}
+                              />
                             </div>
                           </div>
 
@@ -202,7 +252,7 @@ function App() {
                     </div>
                   </header>
                   <div className="main">
-                    <div className="theMap" style={{ width: '75vw', height: '70vh' }}>
+                    <div className="theMap" style={{ width: '75vw', height: '69vh' }}>
                       <MapContainer
                         center={[34.02235633613326, -118.28512377318303]}
                         zoom={15}
@@ -230,8 +280,7 @@ function App() {
                                     </div>
                                   ))}
                                 </Slider>
-                                <p>Date: 12/14</p>
-
+                                
                                 <Link to={`/post/${wp.id}`}>
                                   <button
                                     style={{
@@ -253,6 +302,24 @@ function App() {
                             </Popup>
                           </Marker>
                         ))}
+                        {clickMarker && (
+                          <Marker
+                            position={[clickMarker.latitude, clickMarker.longitude]}
+                            icon={defaultIcon}
+                            eventHandlers={{
+                              add: (e) => {
+                                e.target.openPopup();
+                              }
+                            }}
+                          >
+                            <Popup>
+                              <div>
+                                <h3>Create Waypoint</h3>
+                              </div>
+                            </Popup>
+                          </Marker>
+                        )}
+                        <MapEvents coords={mapCenter} />
                       </MapContainer>
                     </div>
                   </div>
