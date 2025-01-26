@@ -1,6 +1,8 @@
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
+import socket 
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -11,6 +13,7 @@ def index(request):
 #post, get, update, delete 
 #post = frontend specifies a post to api, backend specifies the interaction
 
+@csrf_exempt
 def verify_email(request):
     if request.method == "POST":
         data = json.loads(request.body) 
@@ -27,7 +30,7 @@ def verify_email(request):
             
         response = requests.get(url, headers=headers)
         out = response.json()
-        if out.get("TotalRecords") != 1:
+        if out.get("TotalRecords") != "1":
             return JsonResponse({"error": "Email record does not match"}, status=400)
             
         return JsonResponse({"message": "Email is valid"}, status=200)
@@ -35,23 +38,27 @@ def verify_email(request):
     else:
         return JsonResponse({"error": "Invalid HTTP method. POST is required."}, status=405)
 
-def return_location(request):
-    if request.method == "POST":
-        data = json.loads(request.body) 
-        zipcode = data.get("zip code")
-            
-        if not zipcode:
+@csrf_exempt
+def return_location():
+    try: 
+        hostname = socket.gethostname()
+        ip_address = socket.gethostbyname(hostname)
+                
+        if not ip_address:
             return JsonResponse({"error": "ZipCode is required"}, status=400)
+                
+        url = f"https://globalip.melissadata.net/v4/WEB/iplocation/doiplocation?id=########&t=CurlExample&opt=&ip={ip_address}"
             
-        url = f"https://globalip.melissadata.net/v4/WEB/iplocation/doiplocation?id=########&t=CurlExample&opt=&ip={zip_code}"
-        
         headers = {
             "Accept": "application/json"
         }
-            
+                
         response = requests.get(url, headers=headers)
-        out = response.json()           
-        return JsonResponse({"message": out}, status=200)
+        out = response.json()   
+        lat = int(out.get("Latitude") )
+        lot = int(out.get("Longtitude") )   
+        return JsonResponse({"latitude": lat, "longtitude": lat}, status=200)
 
-    else:
+    except:
         return JsonResponse({"error": "Invalid HTTP method. POST is required."}, status=405)
+

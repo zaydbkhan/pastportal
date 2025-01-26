@@ -13,3 +13,4 @@ class Image(models.Model):
     waypoint = models.ForeignKey(Waypoint, on_delete=models.CASCADE)
     create_dt = models.DateTimeField()
     update_dt = models.DateTimeField() # don't know if users will ever "update" an image, but leaving this here for good practice
+
