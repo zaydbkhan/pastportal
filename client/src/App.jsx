@@ -80,6 +80,8 @@ function App() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const data = await response.json();
+        return data;
     } catch (error) {
         console.error('Error posting waypoints:', error);
     }
@@ -167,9 +169,30 @@ function App() {
     return null;
   };
 
+  const getCurrentISO = () => {
+    const now = new Date();
+    return now.toISOString().slice(0, -5) + "Z";
+  };
+  
   const handleSearch = () => {
     setMapCenter(testCoord);
   }
+
+
+  const handleCreatingWaypoint = async () => {
+    if (clickMarker) {
+      const newWaypoint = await postWaypoint(clickMarker.latitude, clickMarker.longitude, getCurrentISO(), getCurrentISO());
+      if (newWaypoint) {
+        setAllWayPoints(prev => [...prev, newWaypoint]);
+        setImagesArray(prev => ({
+          ...prev,
+          [newWaypoint.id]: []
+        }));
+        setClickMarker(null);
+      }
+    }
+  }
+
 
   const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -365,7 +388,7 @@ function App() {
                           >
                             <Popup>
                               <div>
-                                <h3>Create Waypoint</h3>
+                                <button onClick={handleCreatingWaypoint} className="CreateWPButton">Create Waypoint</button>
                               </div>
                             </Popup>
                           </Marker>

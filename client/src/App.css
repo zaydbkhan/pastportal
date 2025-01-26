@@ -135,3 +135,11 @@ body {
 .custom-next {
   right: -40px; /* Position to the right */
 }
+
+.CreateWPButton{
+  background-color: #fadda3;
+  cursor: pointer;
+  border-color: #fadda3;
+  font-family: monospace;
+  font-size: 14px;
+}
