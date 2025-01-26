@@ -72,7 +72,7 @@ function App() {
     const setLocation = async () => {
       setIsLoading(true);
       setError(null);
-      
+    
       try {
         const response = await fetch('http://localhost:8000/return_location', { 
           method: 'POST',
@@ -80,8 +80,11 @@ function App() {
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            // Add payload if required by the API here
+          }),
         });
-        
+    
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -89,7 +92,7 @@ function App() {
         const data = await response.json();
     
         if (data.latitude && data.longitude) {
-          const stringifiedData = JSON.stringify(data, null, 2); 
+          const stringifiedData = JSON.stringify(data, null, 2); // Pretty print JSON
           setReturnValue(stringifiedData);
         } else {
           throw new Error('Invalid data structure returned from the server');
@@ -104,7 +107,7 @@ function App() {
     };
     
     useEffect(() => {
-      setLocation(); 
+      setLocation(); // Call setLocation when the component mounts
     }, []);
     
 
