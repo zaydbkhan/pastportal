@@ -1,7 +1,8 @@
 import React from 'react';
 import './style.css'; 
 
-const LoginSignup = () => {
+
+const SignUp = () => {
     return (
         <div className="container">
             <div className="header">
@@ -15,19 +16,17 @@ const LoginSignup = () => {
                     <input type="email" placeholder="Email" required />
                 </div>
                 <div className="input">
-                    <input type="text" placeholder="Location" required />
-                </div>
-                <div className="input">
                     <input type="password" placeholder="Password" required />
                 </div>
             </div>
             <div className="submit-container">
                 <button type="submit" className="submit-button">
                     Submit
-                </button>
+                </button> //in the submit func, call the api and redirect based on that 
             </div>
         </div>
     );
 };
 
-export default LoginSignup;
+
+export default Signup;
