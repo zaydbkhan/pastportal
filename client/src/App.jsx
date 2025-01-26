@@ -8,6 +8,8 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'; // Add this import for Leaflet CSS
 
+import logoImg from '../src/images/pastportal_logo.jpg';
+
 function App() {
 
   const defaultIcon = new Icon({
@@ -78,17 +80,11 @@ function App() {
               <>
                 <header className="">
                   <div className="title">
-                    <p>PastPortal</p>
-                  </div>
-                </header>
-                <div className="">
-                  <div className="main">
-                      <div className="topRow">
-
-                        <div className="searchBar">
-                          <input type="text" placeholder="Enter text here..." />
-                        </div>
-                        <div className="buttons">
+                    <div className="logoTitle">
+                    <img src={logoImg} alt="PastPortal"></img>
+                      <p>PastPortal</p>
+                    </div>
+                    <div className="buttons">
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignIn">Sign In</button>
                           </div>
@@ -96,64 +92,64 @@ function App() {
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignUp">Sign Up</button>
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="theMap" style={{width: '75vw', height: '50vh'}}>
-                        <MapContainer
-                          center={[34.02235633613326, -118.28512377318303]}
-                          zoom={15}
-                          scrollWheelZoom={true}
-                          style={{ width: '100%', height: '100%' }}
-                        >
-                          <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                          />
-                          {sampData.map((post) => (
-                            <Marker
-                              key={post.postId}
-                              position={[post.latitude, post.longitude]}
-                              icon={defaultIcon}
-                            >
-                              <Popup>
-                                <div>
-                                  <h3 style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '30px' }}> {post.name}</h3>
-                                  <img
-                                    src={'https://i.ibb.co/HHgB7Cm/cafe-Image.webp'}
-                                    alt={post.name}
-                                    style={{ width: '100%', height: '100%' }}
-                                    onError={(e) => { e.target.src = 'https://i.ibb.co/HHgB7Cm/cafe-Image.webp'; }}
-                                  />
-                                  <p> Description: Image of my cafe</p>
-                                  <p>Date: 12/14</p>
-
-                                  <Link to={`/post/${post.postId}`}>
-                                    <button
-                                      style={{
-                                        backgroundColor: '#581c14',
-                                        fontFamily: '"Courier New", Courier, monospace',
-                                        fontWeight: 'bold',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        color: '#cee7f1',
-                                        borderRadius: '4px',
-                                        padding: '3px',
-                                        fontSize: '13px'
-                                      }}
-                                    >
-                                      Upload images
-                                    </button>
-                                  </Link>
-                                </div>
-                              </Popup>
-                            </Marker>
-                          ))}
-                        </MapContainer>
-                      </div>
-                    
+                    </div>
                   </div>
-                </div>
+                </header>
+                  <div className="main">
+                    <input className="searchBar" style={{width: '40vw', height: '30px'}} type="text" placeholder="Enter a location here..." />
+                    <div className="theMap" style={{width: '75vw', height: '70vh'}}>
+                      <MapContainer
+                        center={[34.02235633613326, -118.28512377318303]}
+                        zoom={15}
+                        scrollWheelZoom={true}
+                        style={{ width: '100%', height: '100%' }}
+                      >
+                        <TileLayer
+                          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        {sampData.map((post) => (
+                          <Marker
+                            key={post.postId}
+                            position={[post.latitude, post.longitude]}
+                            icon={defaultIcon}
+                          >
+                            <Popup>
+                              <div>
+                                <h3 style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '30px' }}> {post.name}</h3>
+                                <img
+                                  src={'https://i.ibb.co/HHgB7Cm/cafe-Image.webp'}
+                                  alt={post.name}
+                                  style={{ width: '100%', height: '100%' }}
+                                  onError={(e) => { e.target.src = 'https://i.ibb.co/HHgB7Cm/cafe-Image.webp'; }}
+                                />
+                                <p> Description: Image of my cafe</p>
+                                <p>Date: 12/14</p>
+
+                                <Link to={`/post/${post.postId}`}>
+                                  <button
+                                    style={{
+                                      backgroundColor: '#581c14',
+                                      fontFamily: '"Courier New", Courier, monospace',
+                                      fontWeight: 'bold',
+                                      border: 'none',
+                                      cursor: 'pointer',
+                                      color: '#cee7f1',
+                                      borderRadius: '4px',
+                                      padding: '3px',
+                                      fontSize: '13px'
+                                    }}
+                                  >
+                                    Upload images
+                                  </button>
+                                </Link>
+                              </div>
+                            </Popup>
+                          </Marker>
+                        ))}
+                      </MapContainer>
+                    </div>
+                  </div>
               </>
             }
           />

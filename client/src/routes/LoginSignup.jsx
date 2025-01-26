@@ -1,12 +1,7 @@
 import React from 'react';
-import './style.css'; // Ensure the correct CSS file path
+import '../App.css'; 
 
-<<<<<<< HEAD
-const SignIn = () => {
-
-=======
 const LoginSignup = () => {
->>>>>>> 37e647ece85aeacbb6925a19e7de4a1610cc8c2e
     return (
         <div className="container">
             <div className="header">
@@ -15,6 +10,12 @@ const LoginSignup = () => {
             <div className="inputs">
                 <div className="input">
                     <input type="text" placeholder="Username" required />
+                </div>
+                <div className="input">
+                    <input type="email" placeholder="Email" required />
+                </div>
+                <div className="input">
+                    <input type="text" placeholder="Location" required />
                 </div>
                 <div className="input">
                     <input type="password" placeholder="Password" required />
