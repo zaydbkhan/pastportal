@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import Home from './routes/Home';
 import SignUp from './routes/SignUp';
 import SignIn from './routes/SignIn';
+import Upload from './routes/Upload';
 
 import theLogo from './images/ppLogo.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
@@ -22,6 +23,58 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   const [allWayPoints, setAllWayPoints] = useState([]);
   const [imagesArray, setImagesArray] = useState({});
+
+
+  const postImage = async (embed_link, description, waypoint, create_dt, update_dt) => {
+    try {
+        const response = await fetch('http://localhost:8000/api/images/', {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "embed_link": embed_link,
+                "description": description,
+                "waypoint": waypoint,
+                "create_dt": create_dt,
+                "update_dt": update_dt
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error posting waypoints:', error);
+    }
+  };
+
+  const postWaypoint = async (latitude, longitude, create_dt, update_dt) => {
+    try {
+        const response = await fetch('http://localhost:8000/api/waypoints/', {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "latitude": latitude,
+                "longitude": longitude,
+                "create_dt": create_dt,
+                "update_dt": update_dt
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error posting waypoints:', error);
+    }
+  };
+
+
 
   useEffect(() => {
     const fetchImages = async (waypointId) => {
@@ -166,7 +219,6 @@ function App() {
     return (
       <Router>
         <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+SA:wght@100..400&display=swap" rel="stylesheet"></link>
-
         <div className="App">
           <Routes>
             <Route
@@ -188,7 +240,7 @@ function App() {
                         </div>
                         <div className="buttons">
                           <div className="button-wrapper">
-                            <button onClick={() => window.location.href = '/home'} className="SignButton" id="Upload">Upload</button>
+                            <button onClick={() => window.location.href = '/upload'} className="SignButton" id="Upload">Upload</button>
                           </div>
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/signin'} className="SignButton" id="SignIn">Sign In</button>
@@ -202,9 +254,9 @@ function App() {
                     </div>
                   </header>
                   <div className="main">
-                    <div className="theMap" style={{ width: '75vw', height: '70vh' }}>
+                    <div className="theMap" style={{ width: '75vw', height: '69vh' }}>
                       <MapContainer
-                        center={[34.02235633613326, -118.28512377318303]}
+                        center={[33.64915706945809, -117.8423368707873]}
                         zoom={15}
                         scrollWheelZoom={true}
                         style={{ width: '100%', height: '100%' }}
@@ -231,8 +283,6 @@ function App() {
                                   ))}
                                 </Slider>
                                 <p>Date: 12/14</p>
-
-                                <Link to={`/post/${wp.id}`}>
                                   <button
                                     style={{
                                       backgroundColor: '#581c14',
@@ -248,7 +298,6 @@ function App() {
                                   >
                                     Upload images
                                   </button>
-                                </Link>
                               </div>
                             </Popup>
                           </Marker>
@@ -262,6 +311,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/upload" element={<Upload />} />
           </Routes>
         </div>
       </Router>
