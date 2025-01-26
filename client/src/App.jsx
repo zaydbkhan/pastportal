@@ -300,6 +300,8 @@ function App() {
     await postImage(url, description, waypoint, iso, iso); // Using current waypoint ID
     e.target.reset();
     console.log("Form submitted");
+
+    window.location.reload()
   }
 
   const handleCreatingWaypoint = async () => {
