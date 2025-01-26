@@ -55,8 +55,8 @@ def return_location():
                 
         response = requests.get(url, headers=headers)
         out = response.json()   
-        lat = out.get("Latitude")  
-        lot = out.get("Longtitude")        
+        lat = int(out.get("Latitude") )
+        lot = int(out.get("Longtitude") )   
         return JsonResponse({"latitude": lat, "longtitude": lat}, status=200)
 
     except:
