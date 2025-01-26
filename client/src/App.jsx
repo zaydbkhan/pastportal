@@ -28,6 +28,10 @@ function App() {
   const [imagesArray, setImagesArray] = useState({});
   const [clickMarker, setClickMarker] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
+  const [mapNorthEastLat, setMapNorthEastLat] = useState(33.65981731927518);
+  const [mapNorthEastLng, setMapNorthEastLng] = useState(-117.81798362731935);
+  const [mapSouthWestLat, setMapSouthWestLat] = useState(33.638525394029216);
+  const [mapSouthWestLng, setMapSouthWestLng] = useState(-117.86664962768556);
 
   const testCoord = {
     latitude: "34.058315",
@@ -158,6 +162,11 @@ function App() {
     useMapEvents({
       click: (e) => {
         const { lat, lng } = e.latlng;
+        const mapBounds = map.getBounds()
+        setMapNorthEastLat(mapBounds.getNorth())
+        setMapNorthEastLng(mapBounds.getEast())
+        setMapSouthWestLat(mapBounds.getSouth())
+        setMapSouthWestLng(mapBounds.getWest())
         setClickMarker({
           latitude: lat,
           longitude: lng,
@@ -330,8 +339,7 @@ function App() {
                   <div className="main">
                     <div className="theMap" style={{ width: '75vw', height: '69vh' }}>
                       <MapContainer
-                        center={[33.64915706945809, -117.8423368707873]}
-                        zoom={15}
+                        bounds={[[mapNorthEastLat,mapNorthEastLng], [mapSouthWestLat, mapSouthWestLng]]}
                         scrollWheelZoom={true}
                         style={{ width: '100%', height: '100%' }}
                       >
