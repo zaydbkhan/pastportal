@@ -81,10 +81,13 @@ function App() {
                 <header className="">
                   <div className="title">
                     <div className="logoTitle">
-                    <img src={logoImg} alt="PastPortal"></img>
-                      <p>PastPortal</p>
+                    <img src={logoImg} alt="PastPortal" width="250" height="210"></img>
+                      <p id="logoText">PastPortal</p>
                     </div>
                     <div className="buttons">
+                          <div className="button-wrapper">
+                            <button onClick={() => window.location.href = '/home'} className="SignButton" id="Upload">Upload</button>
+                          </div>
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignIn">Sign In</button>
                           </div>

@@ -2,10 +2,10 @@ body {
   text-align: center;
   background-color: #fadda3;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   height: 100vh;
   font-family: "Playwrite AU SA", serif;
-  font-size: 30px; 
+  font-size: 60px; 
   color:#b14cdc;
   font-weight: bold;
 }
@@ -60,4 +60,10 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+#logoText{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
