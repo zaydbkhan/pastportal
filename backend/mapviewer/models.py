@@ -8,7 +8,7 @@ class Waypoint(models.Model):
     update_dt = models.DateTimeField()
 
 class Image(models.Model):
-    embed_link = models.URLField()
+    embed_link = models.URLField(max_length=500)
     description = models.TextField()
     waypoint = models.ForeignKey(Waypoint, on_delete=models.CASCADE)
     create_dt = models.DateTimeField()
