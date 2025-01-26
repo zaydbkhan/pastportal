@@ -78,13 +78,20 @@ function App() {
             path="/"
             element={
               <>
-                <header className="">
+                <header className="main">
                   <div className="title">
-                    <div className="logoTitle">
-                    <img src={logoImg} alt="PastPortal" width="250" height="210"></img>
-                      <p id="logoText">PastPortal</p>
-                    </div>
-                    <div className="buttons">
+                    <div className = "area">
+                      <div className = "flex-direction-column">
+                        <div className="logoTitle">
+                          <img src={logoImg} alt="PastPortal" width="250" height="210"></img>
+                          <div className="middle">
+                            <p id="logoText">PastPortal</p>
+                            <input className="searchBar" style={{width: '40vw', height: '30px'}} type="text" placeholder="Enter a location here..." />
+                          </div>    
+                          </div>
+                       
+                      </div>
+                      <div className="buttons">
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="Upload">Upload</button>
                           </div>
@@ -95,11 +102,11 @@ function App() {
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignUp">Sign Up</button>
                           </div>
+                      </div>
                     </div>
                   </div>
                 </header>
                   <div className="main">
-                    <input className="searchBar" style={{width: '40vw', height: '30px'}} type="text" placeholder="Enter a location here..." />
                     <div className="theMap" style={{width: '75vw', height: '70vh'}}>
                       <MapContainer
                         center={[34.02235633613326, -118.28512377318303]}

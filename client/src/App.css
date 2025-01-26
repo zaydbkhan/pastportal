@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   text-align: center;
   background-color: #fadda3;
@@ -7,7 +11,7 @@ body {
   font-family: "Playwrite AU SA", serif;
   font-size: 60px; 
   color:#b14cdc;
-  font-weight: bold;
+
 }
 
 .SignButton{
@@ -43,6 +47,7 @@ body {
   border: 8px solid orange;
 }
 
+
 .title {
   display: flex;
   flex-direction: row;
@@ -56,6 +61,15 @@ body {
   text-align: center;
 }
 
+.middle{
+  width: full;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  
+
+}
+
 .logoTitle {
   display: flex;
   flex-direction: row;
@@ -66,4 +80,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 0%;
+  margin-top: 0%;
+}
+.area{
+  display: flex;
+  justify-content: ;
+  width: full;
 }
