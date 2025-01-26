@@ -21,69 +21,94 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 
 function App() {
-  const [waypoint, setWaypoint] = useState(0);
+  const [waypoint, setWaypoint] = useState(null); // Changed to track current waypoint ID
   const [searching, setReturnValue] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [allWayPoints, setAllWayPoints] = useState([]);
   const [imagesArray, setImagesArray] = useState({});
   const [clickMarker, setClickMarker] = useState(null);
-  const [mapCenter, setMapCenter] = useState(null);
+  const [searchLocation, setSearchLocation] = useState(null);
+
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedWaypoint, setSelectedWaypoint] = useState(null);
+  const [mapNorthEastLat, setMapNorthEastLat] = useState(33.65981731927518);
+  const [mapNorthEastLng, setMapNorthEastLng] = useState(-117.81798362731935);
+  const [mapSouthWestLat, setMapSouthWestLat] = useState(33.638525394029216);
+  const [mapSouthWestLng, setMapSouthWestLng] = useState(-117.86664962768556);
 
   const testCoord = {
     latitude: "34.058315",
     longitude: "-118.246819",
   }
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyCrtAfPxAd-CSFRqCqjEpl1VNqaH_-Gr0s",
+    authDomain: "pastportal-ea656.firebaseapp.com",
+    projectId: "pastportal-ea656",
+    storageBucket: "pastportal-ea656.firebasestorage.app",
+    messagingSenderId: "279867975697",
+    appId: "1:279867975697:web:693a7f91b5041ca34769b0",
+    measurementId: "G-1LDP7VQ9T5"
+  };
+
+  const googleMapsKey = "AIzaSyBieYvORigS57fyS4lLLd71ePzYrqYJ0qA";
+
+
+
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
+
+
 
 
   const postImage = async (embed_link, description, waypoint, create_dt, update_dt) => {
     try {
-        const response = await fetch('http://localhost:8000/api/images/', {
-            method: 'POST',
-            credentials: "include",
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "embed_link": embed_link,
-                "description": description,
-                "waypoint": waypoint,
-                "create_dt": create_dt,
-                "update_dt": update_dt
-            })
-        });
+      const response = await fetch('http://localhost:8000/api/images/', {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "embed_link": embed_link,
+          "description": description,
+          "waypoint": waypoint,
+          "create_dt": create_dt,
+          "update_dt": update_dt
+        })
+      });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
-        console.error('Error posting waypoints:', error);
+      console.error('Error posting waypoints:', error);
     }
   };
 
   const postWaypoint = async (latitude, longitude, create_dt, update_dt) => {
     try {
-        const response = await fetch('http://localhost:8000/api/waypoints/', {
-            method: 'POST',
-            credentials: "include",
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "latitude": latitude,
-                "longitude": longitude,
-                "create_dt": create_dt,
-                "update_dt": update_dt
-            })
-        });
+      const response = await fetch('http://localhost:8000/api/waypoints/', {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "latitude": latitude,
+          "longitude": longitude,
+          "create_dt": create_dt,
+          "update_dt": update_dt
+        })
+      });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
     } catch (error) {
-        console.error('Error posting waypoints:', error);
+      console.error('Error posting waypoints:', error);
     }
   };
 
@@ -148,16 +173,31 @@ function App() {
 
   const MapEvents = ({ coords }) => {
     const map = useMap();
-    
+
     useEffect(() => {
       if (coords) {
-        map.setView([parseFloat(coords.latitude), parseFloat(coords.longitude)], 15);
+        const { latitude, longitude, bounds } = coords;
+        if (bounds) {
+          map.fitBounds([
+            [bounds.north, bounds.east],
+            [bounds.south, bounds.west]
+          ]);
+        } else {
+          map.flyTo([parseFloat(latitude), parseFloat(longitude)], 15, {
+            duration: 2 // Duration of animation in seconds
+          });
+        }
       }
     }, [coords, map]);
 
     useMapEvents({
       click: (e) => {
         const { lat, lng } = e.latlng;
+        const mapBounds = map.getBounds()
+        setMapNorthEastLat(mapBounds.getNorth())
+        setMapNorthEastLng(mapBounds.getEast())
+        setMapSouthWestLat(mapBounds.getSouth())
+        setMapSouthWestLng(mapBounds.getWest())
         setClickMarker({
           latitude: lat,
           longitude: lng,
@@ -165,7 +205,7 @@ function App() {
         });
       }
     });
-    
+
     return null;
   };
 
@@ -173,11 +213,94 @@ function App() {
     const now = new Date();
     return now.toISOString().slice(0, -5) + "Z";
   };
-  
-  const handleSearch = () => {
-    setMapCenter(testCoord);
-  }
 
+  
+
+  const handleSearch = async () => {
+    const searchInput = document.querySelector('.searchBar').value;
+    if (!searchInput) return;
+
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(searchInput)}&key=${googleMapsKey}`
+      );
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.status === 'OK' && data.results.length > 0) {
+        const firstResult = data.results[0];
+        const location = firstResult.geometry.location;
+        const bounds = firstResult.geometry.bounds;
+
+        setSearchLocation({
+          latitude: location.lat.toString(),
+          longitude: location.lng.toString(),
+          bounds: bounds ? {
+            north: bounds.northeast.lat,
+            south: bounds.southwest.lat,
+            east: bounds.northeast.lng,
+            west: bounds.southwest.lng
+          } : null
+        });
+
+        setClickMarker(null);
+
+      } else {
+        console.log('No results found, using default coordinates');
+        setSearchLocation(testCoord);
+        setClickMarker(null);
+
+      }
+    } catch (error) {
+      console.error('Error geocoding address:', error);
+      setSearchLocation(testCoord);
+      setClickMarker(null);
+
+    }
+  };
+
+  const handleUploadingImages = async (e) => {
+    if (!e || !e.target) {
+      console.error("Event object is invalid");
+      return;
+    }
+
+    e.preventDefault();
+
+    const fileInput = e.target.querySelector('input[type="file"]');
+    const descriptionInput = e.target.querySelector('textarea');
+
+    if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+      console.error("No file selected");
+      return;
+    }
+
+    let url;
+    const file = fileInput.files[0];
+
+    const uploadImage = async (file) => {
+      const storageRef = ref(storage, `images/${Date.now()}-${file.name}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    };
+
+    try {
+      url = await uploadImage(file);
+      console.log("Files uploaded. Accessible URLs:", url);
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      return;
+    }
+
+    const iso = getCurrentISO();
+    const description = descriptionInput ? descriptionInput.value : '';
+
+    await postImage(url, description, waypoint, iso, iso); // Using current waypoint ID
+    e.target.reset();
+    console.log("Form submitted");
+  }
 
   const handleCreatingWaypoint = async () => {
     if (clickMarker) {
@@ -188,11 +311,25 @@ function App() {
           ...prev,
           [newWaypoint.id]: []
         }));
+        setWaypoint(newWaypoint.id); // Set current waypoint to new waypoint
         setClickMarker(null);
       }
+
+      // try{
+      //   const img = await fetch(
+      //     `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${clickMarker.latitude},${clickMarker.longitude}&fov=80&heading=70&pitch=0&key=AIzaSyBieYvORigS57fyS4lLLd71ePzYrqYJ0qA`
+      //   );
+
+
+      // }catch (error) {
+      //   console.error('Error google maps api:', error);
+      // }
+      const url = `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${clickMarker.latitude},${clickMarker.longitude}&fov=80&heading=70&pitch=0&key=AIzaSyBieYvORigS57fyS4lLLd71ePzYrqYJ0qA`
+      const iso = getCurrentISO();
+      const descrip = "place"
+      await postImage(url, descrip, newWaypoint.id, iso, iso);
     }
   }
-
 
   const CustomPrevArrow = (props) => {
     const { onClick } = props;
@@ -212,9 +349,80 @@ function App() {
     );
   };
 
+  const UploadModal = ({ onClose, waypoint }) => {
+    return (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000
+      }}>
+        <div style={{
+          backgroundColor: '#fadda3',
+          padding: '20px',
+          borderRadius: '8px',
+          width: '500px',
+          position: 'relative'
+        }}>
+          <button
+            onClick={onClose}
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '10px',
+              border: 'none',
+              background: 'none',
+              fontSize: '20px',
+              cursor: 'pointer'
+            }}
+          >
+            ×
+          </button>
+          <form onSubmit={handleUploadingImages}>
+            <h2 style={{ color: '#581c14',marginTop: '20px' }}>Upload Images</h2>
+            <div style={{ marginTop: '20px' }}>
+              <input style={{ color: '#581c14'}} type="file" multiple accept="image/*" required />
+              <textarea
+                name="description"
+                placeholder="Add description..."
+                style={{
+                  width: '100%',
+                  marginTop: '10px',
+                  padding: '8px',
+                  height: '100px'
+                }}
+                required
+              />
+              <button
+                className="SignButton"
+                type="submit"
+                style={{
+                  marginTop: '10px',
+                  padding: '8px 16px',
+                  backgroundColor: '#581c14',
+                  color: '#f58120',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Upload
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   const SlickCarousel = () => {
     const settings = {
-      dots: true,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
@@ -232,58 +440,16 @@ function App() {
       popupAnchor: [0, -45],
     });
 
-    const sampData = [
-      {
-        postId: 1,
-        latitude: 34.052235,
-        longitude: -118.243683,
-        name: "Cafe Aroma",
-        address: "123 Coffee St, Los Angeles, CA",
-        rating: 4.5,
-        views: 150
-      },
-      {
-        postId: 2,
-        latitude: 34.040713,
-        longitude: -118.246769,
-        name: "Brew Haven",
-        address: "456 Java Ave, Los Angeles, CA",
-        rating: 4.8,
-        views: 200
-      },
-      {
-        postId: 3,
-        latitude: 34.052250,
-        longitude: -118.255600,
-        name: "Espresso Express",
-        address: "789 Latte Blvd, Los Angeles, CA",
-        rating: 4.3,
-        views: 120
-      },
-      {
-        postId: 4,
-        latitude: 34.048927,
-        longitude: -118.258540,
-        name: "Cuppa Bliss",
-        address: "321 Mocha Ln, Los Angeles, CA",
-        rating: 4.7,
-        views: 180
-      },
-      {
-        postId: 5,
-        latitude: 34.058315,
-        longitude: -118.246819,
-        name: "Steamy Brews",
-        address: "654 Cappuccino Rd, Los Angeles, CA",
-        rating: 4.6,
-        views: 220
-      }
-    ];
-
     return (
       <Router>
         <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+SA:wght@100..400&display=swap" rel="stylesheet"></link>
         <div className="App">
+          {showUploadModal && (
+            <UploadModal
+              onClose={() => setShowUploadModal(false)}
+              waypoint={selectedWaypoint}
+            />
+          )}
           <Routes>
             <Route
               path="/"
@@ -296,11 +462,11 @@ function App() {
                           <div className="logoTitle">
                             <img src={logoImg} alt="PastPortal" width="250" height="210"></img>
                             <div className="middle">
-                              <p id="logoText">PastPortal</p>
-                              <input 
-                                className="searchBar" 
-                                style={{ width: '40vw', height: '30px' }} 
-                                type="text" 
+                              <p style= {{color:"#581c14"}}id="logoText">PastPortal</p>
+                              <input
+                                className="searchBar"
+                                style={{ width: '40vw', height: '30px' , border: '2px solid',borderRadius: '10px', borderColor: '#ff9e17'}}
+                                type="text"
                                 placeholder="Enter a location here..."
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
@@ -312,10 +478,8 @@ function App() {
                           </div>
 
                         </div>
-                        <div className="buttons">
-                          <div className="button-wrapper">
-                            <button onClick={() => window.location.href = '/upload'} className="SignButton" id="Upload">Upload</button>
-                          </div>
+                        <div className="buttons" style={{left:"40px"}}>
+
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/signin'} className="SignButton" id="SignIn">Sign In</button>
                           </div>
@@ -330,8 +494,7 @@ function App() {
                   <div className="main">
                     <div className="theMap" style={{ width: '75vw', height: '69vh' }}>
                       <MapContainer
-                        center={[33.64915706945809, -117.8423368707873]}
-                        zoom={15}
+                        bounds={[[mapNorthEastLat, mapNorthEastLng], [mapSouthWestLat, mapSouthWestLng]]}
                         scrollWheelZoom={true}
                         style={{ width: '100%', height: '100%' }}
                       >
@@ -345,35 +508,59 @@ function App() {
                             position={[wp.latitude, wp.longitude]}
                             icon={defaultIcon}
                           >
-                            <Popup>
+                            <Popup style={{ width: "400px", height: "auto", padding: "10px", backgroundRepeat: "no-repeat" }}>
                               <div>
-                                <h3 style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '30px' }}>{wp.name}</h3>
-                                <Slider {...settings}>
-                                  {imagesArray[wp.id]?.map((item, index) => (
-                                    <div key={index} className="slide">
-                                      <img src={item.embed_link} alt={`Slide ${index}`} style={{ width: '100px', height: '100px' }} />
-                                      <p>{item.description}</p>
-                                    </div>
-                                  ))}
-                                </Slider>
+                                {imagesArray[wp.id]?.length === 1 ? (
+                                  <div className="slide" style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "10px", backgroundRepeat: "no-repeat" }}>
+                                    <img
+                                      src={imagesArray[wp.id][0].embed_link}
+                                      alt="Single image"
+                                      style={{ maxWidth: '100%', maxHeight: '200px', marginBottom: '10px' }}
+                                    />
+                                    <p>{imagesArray[wp.id][0].description}</p>
+                                  </div>
+                                ) : (
+                                  <Slider {...{
+                                    ...settings,
+                                    arrows: imagesArray[wp.id]?.length > 1
+                                  }}>
+                                    {imagesArray[wp.id]?.map((item, index) => (
+                                      <div key={index} className="slide" style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "2px", backgroundRepeat: "no-repeat" }}>
+                                        <img
+                                          src={item.embed_link}
+                                          alt={`Slide ${index}`}
+                                          style={{ maxWidth: '100%', maxHeight: '200px', marginBottom: '10px' }}
+                                        />
+                                        <p>{item.description}</p>
+                                      </div>
+                                    ))}
+                                  </Slider>
+                                )}
 
-                                  <button
-                                    style={{
-                                      backgroundColor: '#581c14',
-                                      fontFamily: '"Courier New", Courier, monospace',
-                                      fontWeight: 'bold',
-                                      border: 'none',
-                                      cursor: 'pointer',
-                                      color: '#cee7f1',
-                                      borderRadius: '4px',
-                                      padding: '3px',
-                                      fontSize: '13px'
-                                    }}
-                                  >
-                                    Upload images
-                                  </button>
+                                <button
+                                  onClick={() => {
+                                    setSelectedWaypoint(wp);
+                                    setWaypoint(wp.id); // Update current waypoint when upload button is clicked
+                                    setShowUploadModal(true);
+                                  }}
+                                  style={{
+                                    backgroundColor: '#581c14',
+                                    fontFamily: '"Courier New", Courier, monospace',
+                                    fontWeight: 'bold',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: '#cee7f1',
+                                    borderRadius: '4px',
+                                    padding: '3px',
+                                    fontSize: '13px',
+                                    justifyItems: 'center'
+                                  }}
+                                >
+                                  Upload images
+                                </button>
                               </div>
                             </Popup>
+
                           </Marker>
                         ))}
                         {clickMarker && (
@@ -393,7 +580,7 @@ function App() {
                             </Popup>
                           </Marker>
                         )}
-                        <MapEvents coords={mapCenter} />
+                        <MapEvents coords={searchLocation} />
                       </MapContainer>
                     </div>
                   </div>
