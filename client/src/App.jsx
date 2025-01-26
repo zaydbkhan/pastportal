@@ -493,7 +493,7 @@ function App() {
                     </div>
                   </header>
                   <div className="main">
-                    <div className="theMap" style={{ width: '75vw', height: '69vh' }}>
+                    <div className="theMap" style={{ width: '95vw', height: '69vh' }}>
                       <MapContainer
                         bounds={[[mapNorthEastLat, mapNorthEastLng], [mapSouthWestLat, mapSouthWestLng]]}
                         scrollWheelZoom={true}
