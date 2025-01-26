@@ -1,12 +1,8 @@
 import React from 'react';
 import './style.css'; // Ensure the correct CSS file path
 
-<<<<<<< HEAD
 const SignIn = () => {
 
-=======
-const LoginSignup = () => {
->>>>>>> 37e647ece85aeacbb6925a19e7de4a1610cc8c2e
     return (
         <div className="container">
             <div className="header">
