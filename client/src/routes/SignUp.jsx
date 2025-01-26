@@ -3,6 +3,43 @@ import './style.css';
 
 
 const SignUp = () => {
+    const [emailToValidate, setEmail] = useState("")
+
+    const validateEmail = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('http://localhost:8000/verify_email', { //local host 800 is what django hosts, and to get it, it calls api/waypoints
+                method: 'POST',
+                credentials: "include",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: emailToValidate
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+
+            }
+
+            const data = await response.json();
+            const stringifiedData = JSON.stringify(data, null, 2); // Pretty print JSON
+            setReturnValue(stringifiedData);
+        } catch (error) {
+            console.error('Error fetching waypoints:', error);
+            setError(error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        validateEmail()
+    }, [])
+
     return (
         <div className="container">
             <div className="header">
@@ -13,7 +50,7 @@ const SignUp = () => {
                     <input type="text" placeholder="Username" required />
                 </div>
                 <div className="input">
-                    <input type="email" placeholder="Email" required />
+                    <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
                 </div>
                 <div className="input">
                     <input type="password" placeholder="Password" required />
@@ -22,7 +59,7 @@ const SignUp = () => {
             <div className="submit-container">
                 <button type="submit" className="submit-button">
                     Submit
-                </button> //in the submit func, call the api and redirect based on that 
+                </button> 
             </div>
         </div>
     );
