@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css'; // Ensure the correct CSS file path
 
-const SignIn = () => {
+const LoginSignup = () => {
     return (
         <div className="container">
             <div className="header">
@@ -24,4 +24,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default LoginSignup;
