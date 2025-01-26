@@ -245,7 +245,7 @@ function App() {
                   <div className="main">
                     <div className="theMap" style={{ width: '75vw', height: '70vh' }}>
                       <MapContainer
-                        center={[34.02235633613326, -118.28512377318303]}
+                        center={[33.64915706945809, -117.8423368707873]}
                         zoom={15}
                         scrollWheelZoom={true}
                         style={{ width: '100%', height: '100%' }}
