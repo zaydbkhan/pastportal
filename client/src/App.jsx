@@ -326,7 +326,7 @@ function App() {
       // }
       const url = `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${clickMarker.latitude},${clickMarker.longitude}&fov=80&heading=70&pitch=0&key=AIzaSyBieYvORigS57fyS4lLLd71ePzYrqYJ0qA`
       const iso = getCurrentISO();
-      const descrip = "place"
+      const descrip = "Google Street View"
       await postImage(url, descrip, newWaypoint.id, iso, iso);
     }
   }
@@ -397,7 +397,6 @@ function App() {
                   padding: '8px',
                   height: '100px'
                 }}
-                required
               />
               <button
                 className="SignButton"
