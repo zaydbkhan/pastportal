@@ -23,15 +23,8 @@ function App() {
   const [allWayPoints, setAllWayPoints] = useState([]);
   const [imagesArray, setImagesArray] = useState({});
 
-  // post variables
-  const [postSearching, setPostReturnValue] = useState(false);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
 
   const postImage = async (embed_link, description, waypoint, create_dt, update_dt) => {
-    setIsLoading(true);
-    setError(null);
     try {
         const response = await fetch('http://localhost:8000/api/images/', {
             method: 'POST',
@@ -51,15 +44,32 @@ function App() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-
-        const data = await response.json();
-        const stringifiedData = JSON.stringify(data, null, 2); // Pretty print JSON
-        setPostReturnValue(stringifiedData);
     } catch (error) {
         console.error('Error posting waypoints:', error);
-        setError(error.message);
-    } finally {
-        setIsLoading(false);
+    }
+  };
+
+  const postWaypoint = async (latitude, longitude, create_dt, update_dt) => {
+    try {
+        const response = await fetch('http://localhost:8000/api/waypoints/', {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "latitude": latitude,
+                "longitude": longitude,
+                "create_dt": create_dt,
+                "update_dt": update_dt
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error posting waypoints:', error);
     }
   };
 
