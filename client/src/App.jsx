@@ -36,6 +36,8 @@ function App() {
   const [mapSouthWestLat, setMapSouthWestLat] = useState(33.638525394029216);
   const [mapSouthWestLng, setMapSouthWestLng] = useState(-117.86664962768556);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   const testCoord = {
     latitude: "34.058315",
     longitude: "-118.246819",
@@ -167,7 +169,7 @@ function App() {
     };
 
     fetchWaypoints();
-  }, []);
+  }, [refreshTrigger]);
 
   //use effect ends here
 
@@ -297,9 +299,21 @@ function App() {
     const iso = getCurrentISO();
     const description = descriptionInput ? descriptionInput.value : '';
 
-    await postImage(url, description, waypoint, iso, iso); // Using current waypoint ID
-    e.target.reset();
-    console.log("Form submitted");
+    try {
+      await postImage(url, description, waypoint, iso, iso);
+      e.target.reset();
+      
+      setRefreshTrigger(prev => prev + 1);
+      setShowUploadModal(false);
+      
+      // Reload page after everything is updated
+      setTimeout(() => {
+        window.location.reload();
+      }, 500); // Small delay to ensure all state updates are processed
+      
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
   }
 
   const handleCreatingWaypoint = async () => {
@@ -311,23 +325,20 @@ function App() {
           ...prev,
           [newWaypoint.id]: []
         }));
-        setWaypoint(newWaypoint.id); // Set current waypoint to new waypoint
+        setWaypoint(newWaypoint.id);
         setClickMarker(null);
       }
 
-      // try{
-      //   const img = await fetch(
-      //     `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${clickMarker.latitude},${clickMarker.longitude}&fov=80&heading=70&pitch=0&key=AIzaSyBieYvORigS57fyS4lLLd71ePzYrqYJ0qA`
-      //   );
-
-
-      // }catch (error) {
-      //   console.error('Error google maps api:', error);
-      // }
       const url = `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${clickMarker.latitude},${clickMarker.longitude}&fov=80&heading=70&pitch=0&key=AIzaSyBieYvORigS57fyS4lLLd71ePzYrqYJ0qA`
       const iso = getCurrentISO();
       const descrip = "place"
       await postImage(url, descrip, newWaypoint.id, iso, iso);
+      
+      // Trigger refresh and reload after everything is updated
+      setRefreshTrigger(prev => prev + 1);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500); // Small delay to ensure all state updates are processed
     }
   }
 
