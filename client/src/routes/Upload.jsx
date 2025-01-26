@@ -22,8 +22,15 @@ const Upload = () => {
                     <div className="input">
                         <input type="text" placeholder="Location" required />
                     </div>
+                    <div className="input">
+                        <input type="text" placeholder="Description" required />
+                    </div>
                 </div>
-                <button type="submit">Submit</button>
+                <div className="submit-container">
+                    <button type="submit" className="submit-button">
+                        Submit
+                    </button> 
+                </div>
             </form>
         </div>
     );

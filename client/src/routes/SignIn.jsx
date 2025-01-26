@@ -4,24 +4,32 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 const SignIn = () => {
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle the form submission here (e.g., file upload logic)
+        console.log("Form submitted");
+    };
+
     return (
         <div className="container">
             <div className="header">
                 <div className="text">Sign In</div>
             </div>
-            <div className="inputs">
-                <div className="input">
-                    <input type="text" placeholder="Username" required />
+            <form onSubmit={handleSubmit}>
+                <div className="inputs">
+                    <div className="input">
+                        <input type="text" placeholder="Username" required />
+                    </div>
+                    <div className="input">
+                        <input type="password" placeholder="Password" required />
+                    </div>
                 </div>
-                <div className="input">
-                    <input type="password" placeholder="Password" required />
+                <div className="submit-container">
+                    <button type="submit" className="submit-button">
+                        Submit
+                    </button>
                 </div>
-            </div>
-            <div className="submit-container">
-                <button type="submit" className="submit-button">
-                    Submit
-                </button>
-            </div>
+            </form>
         </div>
     );
 };

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import Home from './routes/Home';
 import SignUp from './routes/SignUp';
 import SignIn from './routes/SignIn';
+import Upload from './routes/Upload';
 
 import theLogo from './images/ppLogo.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
@@ -188,7 +189,7 @@ function App() {
                         </div>
                         <div className="buttons">
                           <div className="button-wrapper">
-                            <button onClick={() => window.location.href = '/home'} className="SignButton" id="Upload">Upload</button>
+                            <button onClick={() => window.location.href = '/upload'} className="SignButton" id="Upload">Upload</button>
                           </div>
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/signin'} className="SignButton" id="SignIn">Sign In</button>
@@ -202,7 +203,7 @@ function App() {
                     </div>
                   </header>
                   <div className="main">
-                    <div className="theMap" style={{ width: '75vw', height: '70vh' }}>
+                    <div className="theMap" style={{ width: '75vw', height: '69vh' }}>
                       <MapContainer
                         center={[34.02235633613326, -118.28512377318303]}
                         zoom={15}
@@ -262,6 +263,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/upload" element={<Upload />} />
           </Routes>
         </div>
       </Router>

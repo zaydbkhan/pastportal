@@ -41,27 +41,35 @@ const SignUp = () => {
     //     validateEmail()
     // }, [])
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle the form submission here (e.g., file upload logic)
+        console.log("Form submitted");
+    };
+
     return (
         <div className="container">
             <div className="header">
                 <div className="text">SignUp</div>
             </div>
-            <div className="inputs">
-                <div className="input">
-                    <input type="text" placeholder="Username" required />
+            <form onSubmit={handleSubmit}>
+                <div className="inputs">
+                    <div className="input">
+                        <input type="text" placeholder="Username" required />
+                    </div>
+                    <div className="input">
+                        <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
+                    </div>
+                    <div className="input">
+                        <input type="password" placeholder="Password" required />
+                    </div>
                 </div>
-                <div className="input">
-                    <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
+                <div className="submit-container">
+                    <button type="submit" className="submit-button">
+                        Submit
+                    </button> 
                 </div>
-                <div className="input">
-                    <input type="password" placeholder="Password" required />
-                </div>
-            </div>
-            <div className="submit-container">
-                <button type="submit" className="submit-button">
-                    Submit
-                </button> 
-            </div>
+            </form>
         </div>
     );
 };
