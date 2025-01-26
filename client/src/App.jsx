@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Home from './routes/Home';
-import LoginSignup from './routes/LoginSignup';
+import SignUp from './routes/SignUp';
+import SignIn from './routes/SignIn';
+
 import theLogo from './images/ppLogo.png';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
@@ -96,11 +98,11 @@ function App() {
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="Upload">Upload</button>
                           </div>
                           <div className="button-wrapper">
-                            <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignIn">Sign In</button>
+                            <button onClick={() => window.location.href = '/signin'} className="SignButton" id="SignIn">Sign In</button>
                           </div>
 
                           <div className="button-wrapper">
-                            <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignUp">Sign Up</button>
+                            <button onClick={() => window.location.href = '/signup'} className="SignButton" id="SignUp">Sign Up</button>
                           </div>
                       </div>
                     </div>
@@ -164,7 +166,8 @@ function App() {
             }
           />
           <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<LoginSignup />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </div>
     </Router>

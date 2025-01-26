@@ -1,44 +1,45 @@
-import React from 'react';
-import './style.css'; 
-
+//import './style.css'; 
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 const SignUp = () => {
     const [emailToValidate, setEmail] = useState("")
 
-    const validateEmail = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const response = await fetch('http://localhost:8000/verify_email', { //local host 800 is what django hosts, and to get it, it calls api/waypoints
-                method: 'POST',
-                credentials: "include",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: emailToValidate
-                })
-            });
+    // const validateEmail = async () => {
+    //     setIsLoading(true);
+    //     setError(null);
+    //     try {
+    //         const response = await fetch('http://localhost:8000/verify_email', { //local host 800 is what django hosts, and to get it, it calls api/waypoints
+    //             method: 'POST',
+    //             credentials: "include",
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 email: emailToValidate
+    //             })
+    //         });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+    //         if (!response.ok) {
+    //             throw new Error(`HTTP error! status: ${response.status}`);
 
-            }
+    //         }
 
-            const data = await response.json();
-            const stringifiedData = JSON.stringify(data, null, 2); // Pretty print JSON
-            setReturnValue(stringifiedData);
-        } catch (error) {
-            console.error('Error fetching waypoints:', error);
-            setError(error.message);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    //         const data = await response.json();
+    //         const stringifiedData = JSON.stringify(data, null, 2); // Pretty print JSON
+    //         setReturnValue(stringifiedData);
+    //     } catch (error) {
+    //         console.error('Error fetching waypoints:', error);
+    //         setError(error.message);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
-    useEffect(() => {
-        validateEmail()
-    }, [])
+    // useEffect(() => {
+    //     validateEmail()
+    // }, [])
 
     return (
         <div className="container">
@@ -65,4 +66,4 @@ const SignUp = () => {
     );
 };
 
-export default LoginSignup;
+export default SignUp;
