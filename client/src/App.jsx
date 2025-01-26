@@ -78,7 +78,10 @@ function App() {
               <>
                 <header className="">
                   <div className="title">
-                    <div><p>PastPortal</p></div>
+                    <div className="logoTitle">
+                    <img src="images/pastportal_logo.jpg" alt="PastPortal"></img>
+                      <p>PastPortal</p>
+                    </div>
                     <div className="buttons">
                           <div className="button-wrapper">
                             <button onClick={() => window.location.href = '/home'} className="SignButton" id="SignIn">Sign In</button>

@@ -55,3 +55,9 @@ body {
   margin-bottom: 25px;
   text-align: center;
 }
+
+.logoTitle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
