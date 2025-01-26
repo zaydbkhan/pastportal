@@ -134,3 +134,15 @@ body {
 .custom-next {
   right: -40px; /* Position to the right */
 }
+
+.submit_button{
+  color: #655ac7;
+  background-color: #ffacd7;
+  margin: 2%;
+  border-radius: 20px;
+  width: 100px;
+  height: 50px;
+  font-size: 20px;
+  cursor: 'pointer';
+  border-style: solid;
+}
