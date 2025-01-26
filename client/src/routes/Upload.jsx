@@ -28,10 +28,15 @@ const Upload = () => {
         }
       };
 
+    const imgToUrl = () => {
+        return ""
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(e.target.imgfile)
         var iso = new Date().toISOString()
-        postImage("https://github.com/zaydbkhan/pastportal/tree/main", e.target.description.value, 1, iso, iso)
+        postImage(imgToUrl(e.target.imgfile), e.target.description.value, 1, iso, iso)
         e.target.reset()
         console.log("Form submitted");
     };
