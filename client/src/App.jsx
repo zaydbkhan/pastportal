@@ -25,6 +25,48 @@ function App() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
+  // post variables
+  const [postSearching, setPostReturnValue] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const postImage = async (embed_link, description, waypoint, create_dt, update_dt) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+        const response = await fetch('http://localhost:8000/api/images/', {
+            method: 'POST',
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "embed_link": embed_link,
+                "description": description,
+                "waypoint": waypoint,
+                "create_dt": create_dt,
+                "update_dt": update_dt
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const stringifiedData = JSON.stringify(data, null, 2); // Pretty print JSON
+        setPostReturnValue(stringifiedData);
+    } catch (error) {
+        console.error('Error posting waypoints:', error);
+        setError(error.message);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+
+
   useEffect(() => {
 
     const setLocation = async () => {
@@ -208,7 +250,6 @@ function App() {
     return (
       <Router>
         <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+SA:wght@100..400&display=swap" rel="stylesheet"></link>
-
         <div className="App">
           <Routes>
             <Route
@@ -273,8 +314,6 @@ function App() {
                                   ))}
                                 </Slider>
                                 <p>Date: 12/14</p>
-
-                                <Link to={`/post/${wp.id}`}>
                                   <button
                                     style={{
                                       backgroundColor: '#581c14',
@@ -290,7 +329,6 @@ function App() {
                                   >
                                     Upload images
                                   </button>
-                                </Link>
                               </div>
                             </Popup>
                           </Marker>
