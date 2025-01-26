@@ -58,3 +58,4 @@ def return_location():
 
     except:
         return JsonResponse({"error": "Invalid HTTP method. POST is required."}, status=405)
+
