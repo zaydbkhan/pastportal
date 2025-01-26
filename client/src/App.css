@@ -19,10 +19,12 @@ body {
   height: 50px;
   font-size: 20px;
   cursor: 'pointer';
+  border-style: solid;
 }
 
 .buttons{
   display: flex;
+  column-gap: 5px;
 }
 
 .main{
@@ -38,7 +40,18 @@ body {
 
 /* width and height changes must be updated inline */
 .theMap {
-  width: '75vw';
-  height: '50vh';
   border: 8px solid orange;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* same here */
+.searchBar {
+  margin-bottom: 25px;
+  text-align: center;
 }
