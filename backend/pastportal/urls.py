@@ -17,15 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from mapviewer import views
+from pastportal.views import verify_email, return_location
+from mapviewer.views import WaypointView, ImageView
 
 router = routers.DefaultRouter()
-router.register(r'waypoints', views.WaypointView, 'waypoint')
-router.register(r'images', views.ImageView, 'image')
+router.register(r'waypoints', WaypointView, 'waypoint')
+router.register(r'images', ImageView, 'image')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('verify_email/', views.verify_email, name='verify_email'),
-    path('return_location/', views.return_location, name='return_location'),
+    path('verify_email/', verify_email, name='verify_email'),
+    path('return_location/', return_location, name='return_location'),
 ]
