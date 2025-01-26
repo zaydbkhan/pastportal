@@ -3,9 +3,36 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 const Upload = () => {
 
+    const postImage = async (embed_link, description, waypoint, create_dt, update_dt) => {
+        try {
+            const response = await fetch('http://localhost:8000/api/images/', {
+                method: 'POST',
+                credentials: "include",
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "embed_link": embed_link,
+                    "description": description,
+                    "waypoint": waypoint,
+                    "create_dt": create_dt,
+                    "update_dt": update_dt
+                })
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Error posting waypoints:', error);
+        }
+      };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle the form submission here (e.g., file upload logic)
+        var iso = new Date().toISOString()
+        postImage("https://github.com/zaydbkhan/pastportal/tree/main", e.target.description.value, 1, iso, iso)
+        e.target.reset()
         console.log("Form submitted");
     };
 
@@ -17,13 +44,10 @@ const Upload = () => {
             <form onSubmit={handleSubmit}>
                 <div className="inputs">
                     <div className="input">
-                        <input type="file" accept="image/*" placeholder="Image" required />
+                        <input name="imgfile" type="file" accept="image/*" placeholder="Image" required />
                     </div>
                     <div className="input">
-                        <input type="text" placeholder="Location" required />
-                    </div>
-                    <div className="input">
-                        <input type="text" placeholder="Description" required />
+                        <input name="description" type="text" placeholder="Description" required />
                     </div>
                 </div>
                 <div className="submit-container">
